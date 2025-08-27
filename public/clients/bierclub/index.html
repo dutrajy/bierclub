@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover" />
+
+	<title>403 Bier Club</title>
+	<meta name="description" content="Description of the page less than 150 characters" />
+
+	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+	<link rel="icon" type="image/png" href="/images/favicon.png" />
+
+	<link rel="stylesheet" href="/styles/fontawesome.min.css" />
+	<link rel="stylesheet" href="/styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="/styles/simple-keyboard.css">
+	<link rel="stylesheet" href="/styles/main.css" />
+	<link rel="stylesheet" href="/clients/bierclub/application.css" />
+</head>
+<body>
+	<script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
+	<script src="/scripts/jquery.min.js"></script>
+	<script src="/scripts/jquery.mask.min.js"></script>
+	<script src="/scripts/popper.min.js"></script>
+	<script src="/scripts/bootstrap.min.js"></script>
+	<script src="/scripts/sweetalert2.min.js"></script>
+	<script src="/clients/bierclub/application.js"></script>
+	<script>
+		Mercadopago.setPublishableKey("APP_USR-4b636a2e-c5ba-4d9c-94f0-863282265e49");
+
+		function getBin() {
+			var ccNumber = document.querySelector('input[data-checkout="cardNumber"]');
+			return ccNumber.value.replace(/[ .-]/g, '').slice(0, 6);
+		};
+
+		function guessingPaymentMethod(event) {
+			var bin = getBin();
+			if (event.type == "keyup") {
+				if (bin.length >= 6) {
+					Mercadopago.getPaymentMethod({
+						"bin": bin
+					}, setPaymentMethodInfo);
+				}
+			} else {
+				setTimeout(function() {
+					if (bin.length >= 6) {
+						Mercadopago.getPaymentMethod({
+							"bin": bin
+						}, setPaymentMethodInfo);
+					}
+				}, 100);
+			}
+		};
+
+		Mercadopago.getIdentificationTypes();
+
+		function setPaymentMethodInfo(status, response) {
+			if (status == 200) {
+				// do somethings ex: show logo of the payment method
+				var form = document.querySelector('#pay');
+				if (document.querySelector("input[name=paymentMethodId]") == null) {
+					var paymentMethod = document.createElement('input');
+					paymentMethod.setAttribute('name', "paymentMethodId");
+					paymentMethod.setAttribute('type', "hidden");
+					paymentMethod.setAttribute('value', response[0].id);
+					form.appendChild(paymentMethod);
+				} else {
+					document.querySelector("input[name=paymentMethodId]").value = response[0].id;
+				}
+			}
+		};
+
+		function addEvent(el, eventName, handler) {
+			if (el.addEventListener) {
+			   el.addEventListener(eventName, handler);
+			} else {
+				el.attachEvent('on' + eventName, function(){
+				  handler.call(el);
+				});
+			}
+		};
+
+		addEvent(document.querySelector('input[data-checkout="cardNumber"]'), 'keyup', guessingPaymentMethod);
+		addEvent(document.querySelector('input[data-checkout="cardNumber"]'), 'change', guessingPaymentMethod);
+		doSubmit = false;
+		addEvent(document.querySelector('#pay'),'submit',doPay);
+
+		function doPay(event){
+			event.preventDefault();
+			if(!doSubmit){
+				var $form = document.querySelector('#pay');
+				Mercadopago.createToken($form, sdkResponseHandler); // The function "sdkResponseHandler" is defined below
+				return false;
+			}
+		};
+
+		function sdkResponseHandler(status, response) {
+			console.log(response);
+			if (status != 200 && status != 201) {
+				alert("verify filled data");
+			}else{
+				var form = document.querySelector('#pay');
+				var card = document.createElement('input');
+				card.setAttribute('name',"token");
+				card.setAttribute('type',"hidden");
+				card.setAttribute('value',response.id);
+				form.appendChild(card);
+				doSubmit=true;
+				form.submit();
+			}
+		};
+	</script>
+	<script src="/scripts/simple-keyboard.js"></script>
+    <script>
+        let Keyboard = window.SimpleKeyboard.default;
+
+        // Here we'll store the input id that simple-keyboard will be using.
+        var selectedInput;
+
+        // Initialize simple-keyboard as usual
+        var keyboard = new Keyboard({
+            onChange: input => onChange(input),
+            onKeyPress: button => onKeyPress(button)
+        });
+
+
+        /**
+        * When an input is focused, it will be marked as selected (selectedInput)
+        * This is so we can replace it's value on the onChange function
+        *
+        * Also, we will set the inputName option to a unique string identifying the input (id)
+        * simple-keyboard save the input in this key and report changes through onChange
+        */
+        onInputFocus = event => {
+        // Setting input as selected
+        selectedInput = `#${event.target.id}`;
+
+        // Set the inputName option on the fly !
+        keyboard.setOptions({
+            inputName: event.target.id
+        });
+        }
+
+        // When the current input is changed, this is called
+        function onChange(input) {
+            // If the input is not defined, grabbing the first ".input".
+            let currentInput = selectedInput || '.input';
+
+            // Updating the selected input's value
+            document.querySelector(currentInput).value = input;
+        }
+
+        function onKeyPress(button) {
+            /**
+             * If you want to handle the shift and caps lock buttons
+             */
+            if (button === "{shift}" || button === "{lock}") handleShift();
+        }
+
+        // Add an event listener for the inputs to be tracked
+        document.querySelectorAll('.input')
+        .forEach(input => input.addEventListener('focus', onInputFocus));
+
+
+        function handleShift() {
+            let currentLayout = keyboard.options.layoutName;
+            let shiftToggle = currentLayout === "default" ? "shift" : "default";
+
+            keyboard.setOptions({
+                layoutName: shiftToggle
+            });
+        }
+
+    </script>
+</body>
+</html>

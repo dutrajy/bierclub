@@ -1,0 +1,9 @@
+{
+    "name": "sabaior/commercial",
+    "require": {
+        "mercadopago/dx-php": "dev-master"
+    },
+    "scripts": {
+        "serve": "php -S 0.0.0.0:8000 -t public"
+    }
+}

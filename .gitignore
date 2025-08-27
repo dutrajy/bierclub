@@ -1,0 +1,8 @@
+vendor/
+logs/
+temp/
+.env
+
+# Let´s Encrypt
+public/.well-known
+public/keys

@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "application.css",
+  "sources": [
+    "../../../clients/bierclub/src/Keyboard.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n    export let text = \"\";\n\n    function add(letter) {\n        text += letter.toUpperCase();\n    }\n\n    function removeLetter()\n    {\n        text = text.slice(0, -1);\n    }\n\n</script>\n\n<style>\n    div {\n        font-family: monospace;\n    }\n    input {\n        font-size: 1rem !important;\n    }\n    button {\n        font-size: 1rem !important;\n        padding: 0.5rem 0.8rem;\n    }\n</style>\n\n<div class=\"row\">\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark\" on:click={() => add(\".\")}>.</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"7\")}>7</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"8\")}>8</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"9\")}>9</button>\n</div>\n<div class=\"row mt-2\">\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark\" on:click={() => add(\",\")}>,</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"4\")}>4</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"5\")}>5</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"6\")}>6</button>\n</div>\n<div class=\"row mt-2\">\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark\" on:click={() => add(\"0\")}>0</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"1\")}>1</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"2\")}>2</button>\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark ml-2\" on:click={() => add(\"3\")}>3</button>\n</div>\n<div class=\"row\">\n    <button type=\"button\" class=\"btn btn-lg btn-outline-dark my-2\" on:click={removeLetter}><i class=\"fas fa-backspace\"></i></button>\n</div>\n"
+  ],
+  "names": [],
+  "mappings": "AAeI,GAAG,eAAC,CAAC,AACD,WAAW,CAAE,SAAS,AAC1B,CAAC,AAID,MAAM,eAAC,CAAC,AACJ,SAAS,CAAE,IAAI,CAAC,UAAU,CAC1B,OAAO,CAAE,MAAM,CAAC,MAAM,AAC1B,CAAC"
+}
